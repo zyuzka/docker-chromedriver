@@ -1,0 +1,33 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    needs: create-tag-matrix
+    runs-on: ubuntu-latest
+    env:
+      ORGA: 'zyuzka'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          ### docker-chromedriver:latest
+          - image: 'Dockerfile'
+            tags: [ "$ORGA/docker-chromedriver:latest" ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+      - name: Login to docker hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Install platform emulator collection
+        run: docker run --privileged --rm tonistiigi/binfmt --install all
+      - name: Build images
+        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
