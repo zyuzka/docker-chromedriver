@@ -7,15 +7,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ORGA: 'zyuzka'
     strategy:
       fail-fast: false
       matrix:
         include:
           ### docker-chromedriver:latest
           - image: 'Dockerfile'
-            tags: [ "$ORGA/chromedriver:latest" ]
+            tags: [ "zyuzka/chromedriver:latest" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
