@@ -21,11 +21,12 @@ else
   MAKE_SYMLINKS=true
 fi
 
-if [ "${TARGETPLATFORM}" = "linux/arm64"] ; then
-  CHROME_PLATFORM="Linux_ARM_Cross-Compile"
-else
-  CHROME_PLATFORM="Linux_x64"
-fi
+#if [ "${TARGETPLATFORM}" = "linux/arm64"] ; then
+#  CHROME_PLATFORM="Linux_ARM_Cross-Compile"
+#else
+#  CHROME_PLATFORM="Linux_x64"
+#fi
+CHROME_PLATFORM="Linux_ARM_Cross-Compile"
 
 # You can use $CHROMEDRIVER_INSTALL_DIR as caching directory within Travis
 CHROMIUM_ZIP_FILENAME="chrome-linux" \
