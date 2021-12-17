@@ -27,4 +27,4 @@ jobs:
       - name: Install platform emulator collection
         run: docker run --privileged --rm tonistiigi/binfmt --install all
       - name: Build images
-        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm/v5
+        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
