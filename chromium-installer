@@ -21,10 +21,16 @@ else
   MAKE_SYMLINKS=true
 fi
 
+if [ "${TARGETPLATFORM}" = "linux/arm64"] ; then
+  CHROME_PLATFORM="Linux_ARM_Cross-Compile"
+else
+  CHROME_PLATFORM="Linux_x64"
+fi
+
 # You can use $CHROMEDRIVER_INSTALL_DIR as caching directory within Travis
 CHROMIUM_ZIP_FILENAME="chrome-linux" \
   && CHROMEDRIVER_ZIP_FILENAME="chromedriver_linux64" \
-  && ZIP_URL_PREFIX="https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F" \
+  && ZIP_URL_PREFIX="https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/$CHROME_PLATFORM%2F" \
   && ZIP_URL_POSTFIX="?alt=media"
 
 # --- 0. PREPARE
