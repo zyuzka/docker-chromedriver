@@ -34,7 +34,7 @@ jobs:
             platforms: ["linux/amd64", "linux/arm64"]
             chromium-version: 81.0.4044.113-r0
 
-          - image: 'debianDockerfile'
+          - image: 'debian/Dockerfile'
             tags: [ "zyuzka/chromedriver:debian" ]
             platforms: [ "linux/amd64", "linux/arm64" ]
             chromium-version: 81.0.4044.113-r0
