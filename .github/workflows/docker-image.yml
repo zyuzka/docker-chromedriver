@@ -11,20 +11,50 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          ### docker-chromedriver:latest
           - image: 'Dockerfile'
-            tags: [ "zyuzka/chromedriver:latest" ]
+            tags: [ "zyuzka/chromedriver:latest", "zyuzka/chromedriver:100" ]
+            platforms: ["linux/amd64", "linux/arm64"]
+            chromium-version: 100.0.4896.60-r0
+
+          - image: 'Dockerfile'
+            tags: [ "zyuzka/chromedriver:99" ]
+            platforms: ["linux/amd64", "linux/arm64"]
+            chromium-version: 99.0.4844.84-r0
+
+          - image: 'Dockerfile'
+            tags: [ "zyuzka/chromedriver:93" ]
+            platforms: ["linux/amd64", "linux/arm64"]
+            chromium-version: 93.0.4577.82-r0
+
+          - image: 'Dockerfile'
+            tags: [ "zyuzka/chromedriver:86" ]
+            platforms: ["linux/amd64", "linux/arm64"]
+            chromium-version: 86.0.4240.111-r0
+
+          - image: 'Dockerfile'
+            tags: [ "zyuzka/chromedriver:81" ]
+            platforms: ["linux/amd64", "linux/arm64"]
+            chromium-version: 81.0.4044.113-r0
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          version: latest
-      - name: Login to docker hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: Install platform emulator collection
-        run: docker run --privileged --rm tonistiigi/binfmt --install all
-      - name: Build images
-        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: ${{ github.ref == 'refs/heads/master' }}
+          file: ${{ matrix.image }}
+          tags: ${{ join(matrix.tags) }}
+          platforms: ${{ join(matrix.platforms) }}
+          build-args: |
+            CHROMIUM_VERSION=${{ matrix.chromium-version }}
