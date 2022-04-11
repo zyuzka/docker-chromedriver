@@ -33,6 +33,11 @@ jobs:
             tags: [ "zyuzka/chromedriver:81" ]
             platforms: ["linux/amd64", "linux/arm64"]
             chromium-version: 81.0.4044.113-r0
+
+          - image: 'debianDockerfile'
+            tags: [ "zyuzka/chromedriver:debian" ]
+            platforms: [ "linux/amd64", "linux/arm64" ]
+            chromium-version: 81.0.4044.113-r0
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -50,6 +55,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: ${{ github.ref == 'refs/heads/master' }}
           file: ${{ matrix.image }}
           tags: ${{ join(matrix.tags) }}
